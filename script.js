@@ -5,6 +5,25 @@ let progressBalance = 500; // Start with 500 points for 500
 function redirectToTelegram() {
     window.location.href = "https://t.me/airdrops_uncle";
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const user = window.Telegram.WebApp.initDataUnsafe.user;
+
+    if (user) {
+        let username = user.username || user.first_name || 'Unknown';
+        if (username.length > 10) {
+            username = username.substring(0, 10) + '...';
+        }
+        document.getElementById('username-value').innerText = username;
+
+        const storedBalance = localStorage.getItem(`balance_${user.id}`);
+        if (storedBalance !== null) {
+            balance = parseFloat(storedBalance);
+        }
+        updateDisplay();
+    } else {
+        alert("Unable to get Telegram user info.");
+    }
+});
 
 function incrementBalance() {
     if (progressBalance > 0) {
