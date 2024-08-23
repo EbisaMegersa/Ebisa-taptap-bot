@@ -1,10 +1,7 @@
 let balance = 0;
 let level = 1;
-let progressBalance = 500; // Start with 500 points for 500
+let progressBalance = 500; // Start with 500 points for progress
 
-function redirectToTelegram() {
-    window.location.href = "https://t.me/airdrops_uncle";
-}
 document.addEventListener('DOMContentLoaded', () => {
     const user = window.Telegram.WebApp.initDataUnsafe.user;
 
@@ -15,11 +12,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('username-value').innerText = username;
 
+        // Retrieve stored balance from localStorage
         const storedBalance = localStorage.getItem(`balance_${user.id}`);
+        const storedLevel = localStorage.getItem(`level_${user.id}`);
+
         if (storedBalance !== null) {
             balance = parseFloat(storedBalance);
         }
-        updateDisplay();
+
+        if (storedLevel !== null) {
+            level = parseInt(storedLevel, 10);
+        }
+
+        document.getElementById('balance').innerText = `Balance: ${balance}`;
+        document.getElementById('level').innerText = `Level: ${level}`;
+        
+        updateProgressBar(); // Ensure the progress bar is updated
     } else {
         alert("Unable to get Telegram user info.");
     }
@@ -30,13 +38,16 @@ function incrementBalance() {
         balance += 1; // Increase the main balance
         progressBalance -= 1; // Decrease progress by 1 point on each tap
         updateProgressBar();
-        
+
+        // Update balance and save it to localStorage
         document.getElementById('balance').innerText = `Balance: ${balance}`;
-        
+        localStorage.setItem(`balance_${window.Telegram.WebApp.initDataUnsafe.user.id}`, balance);
+
         // Level up mechanism
         if (balance % 10 === 0) { 
             level += 1;
             document.getElementById('level').innerText = `Level: ${level}`;
+            localStorage.setItem(`level_${window.Telegram.WebApp.initDataUnsafe.user.id}`, level);
         }
     }
 }
