@@ -79,9 +79,11 @@ body {
     width: 80%;
     background-color: #e0e0e0;
     border-radius: 25px;
-    margin: 150px auto 0 auto;
     height: 15px;
-    position: relative;
+    position: fixed;
+    bottom: 100px;
+    left: 40px;
+    right: 30px;
 }
 
 #progress-bar {
