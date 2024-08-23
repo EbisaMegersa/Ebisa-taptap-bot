@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Telegram Bot Interface</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="join-message">
+       <div id="username"> <span id="username-value">Unknown</span></div>
+      <button id="join-btn"><a href="https://t.me/et_tech_tipz">Join Community</a></button>
+    </div>
+
+    <div id="status">
+        <div id="balance">Balance: 0</div>
+        <div id="level">Level: 1</div>
+    </div>
+
+    <img src="https://telegra.ph/file/c961beeb8e6b2a1a8bf58.jpg" alt="Tap Photo" id="tap-photo" onclick="incrementBalance()">
+
+    <!-- Progress Bar -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div id="navbar">
+        <ul>
+            <li data-icon="🏠">Home</li>
+            <li data-icon="📋">Task</li>
+            <li data-icon="👥">Friends</li>
+            <li data-icon="💸">Withdraw</li>
+        </ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
