@@ -1,6 +1,7 @@
 let balance = 0;
 let level = 1;
 let progressBalance = 500; // Start with 500 points for progress
+const incrementValue = 1; // Define increment value for balance
 
 document.addEventListener('DOMContentLoaded', () => {
     const user = window.Telegram.WebApp.initDataUnsafe.user;
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('username-value').innerText = username;
 
-        // Retrieve stored balance from localStorage
+        // Retrieve stored balance and level from localStorage
         const storedBalance = localStorage.getItem(`balance_${user.id}`);
         const storedLevel = localStorage.getItem(`level_${user.id}`);
 
@@ -26,30 +27,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('balance').innerText = `Balance: ${balance}`;
         document.getElementById('level').innerText = `Level: ${level}`;
-        
+
         updateProgressBar(); // Ensure the progress bar is updated
     } else {
         alert("Unable to get Telegram user info.");
     }
 });
 
-function incrementBalance() {
+document.getElementById('tap-photo').addEventListener('touchstart', (event) => {
+    event.preventDefault();
+
+    // Handle photo tap
+    handleTap(event.touches);
+});
+
+function handleTap(touches) {
     if (progressBalance > 0) {
-        balance += 1; // Increase the main balance
-        progressBalance -= 1; // Decrease progress by 1 point on each tap
+        // Add +1 to user balance and remove 1 from progress balance
+        balance += incrementValue;
+        progressBalance -= incrementValue;
+
+        // Update balance and progress bar
+        document.getElementById('balance').innerText = `Balance: ${balance}`;
+        document.getElementById('level').innerText = `Level: ${level}`;
         updateProgressBar();
 
-        // Update balance and save it to localStorage
-        document.getElementById('balance').innerText = `Balance: ${balance}`;
-        localStorage.setItem(`balance_${window.Telegram.WebApp.initDataUnsafe.user.id}`, balance);
+        // Save updated values to localStorage
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
+        if (user) {
+            localStorage.setItem(`balance_${user.id}`, balance.toFixed(4));
+            localStorage.setItem(`level_${user.id}`, level);
+        }
 
-        // Level up mechanism
-        if (balance % 10 === 0) { 
-            level += 1;
-            document.getElementById('level').innerText = `Level: ${level}`;
-            localStorage.setItem(`level_${window.Telegram.WebApp.initDataUnsafe.user.id}`, level);
+        // Show floating text for each touch
+        for (let i = 0; i < touches.length; i++) {
+            const touch = touches[i];
+            createFloatingText(touch.clientX, touch.clientY, '+1 ETB');
         }
     }
+}
+
+function createFloatingText(x, y, text) {
+    const floatingText = document.createElement('div');
+    floatingText.innerText = text;
+    floatingText.className = 'floating-text'; // Use CSS class for styling
+    floatingText.style.left = `${x}px`;
+    floatingText.style.top = `${y}px`;
+    document.body.appendChild(floatingText);
+
+    // Animate floating text
+    setTimeout(() => {
+        floatingText.style.transform = 'translateY(-70px)';
+        floatingText.style.opacity = '0';
+    }, 50);
+
+    // Remove the floating text after animation
+    setTimeout(() => {
+        floatingText.remove();
+    }, 1050);
 }
 
 function updateProgressBar() {
